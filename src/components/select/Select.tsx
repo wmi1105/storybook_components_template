@@ -1,13 +1,9 @@
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { IPropTypes, SELECT_THEME } from "./types";
 
-interface IPropTypes {
-  optionData: { value: string; text: string }[];
-  selected: number;
-  onChange: (idx: number) => void;
-}
-
-export function Select({ optionData, selected, onChange }: IPropTypes) {
+export function Select({ optionData, selected, onChange, theme }: IPropTypes) {
   const [isOpen, setIsOpen] = useState(false);
   const nowOptionData = optionData[selected];
 
@@ -25,14 +21,14 @@ export function Select({ optionData, selected, onChange }: IPropTypes) {
       <SelectStyled onClick={setSelectOpen}>{nowOptionData.text}</SelectStyled>
       {isOpen && (
         <>
-          <SelectOptionStyled>
+          <SelectOptionStyled theme={theme}>
             {optionData.map(({ text }, idx) => (
               <li key={idx} onClick={() => setSelectValue(idx)}>
                 {text}
               </li>
             ))}
           </SelectOptionStyled>
-          <BackgroundLayer />
+          <BackgroundLayer theme={theme} />
         </>
       )}
     </SelectWrapper>
@@ -41,6 +37,7 @@ export function Select({ optionData, selected, onChange }: IPropTypes) {
 
 Select.defaultProps = {
   selected: 0,
+  theme: SELECT_THEME.DEFAULT,
 };
 
 const SelectWrapper = styled.div``;
@@ -54,30 +51,45 @@ const SelectStyled = styled.div`
   }
 `;
 
-const SelectOptionStyled = styled.ul`
-  padding: 10px;
+const SelectOptionStyled = styled.ul<{ theme: SELECT_THEME }>`
+  padding: 0;
+
   margin: 0;
   list-style: none;
   background-color: #fff;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: calc(100% - 20px);
   z-index: 10;
   li {
     padding: 10px;
     border: 1px solid #ababab;
   }
+
+  ${(props) => {
+    if (props.theme === SELECT_THEME.POPUP) {
+      return css`
+        padding: 10px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: calc(100% - 20px);
+      `;
+    }
+  }}
 `;
 
-const BackgroundLayer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  background-color: black;
-  opacity: 0.5;
-  z-index: 5;
+const BackgroundLayer = styled.div<{ theme: SELECT_THEME }>`
+  ${(props) => {
+    if (props.theme === SELECT_THEME.POPUP) {
+      return css`
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background-color: black;
+        opacity: 0.5;
+        z-index: 5;
+      `;
+    }
+  }}
 `;

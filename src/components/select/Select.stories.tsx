@@ -1,6 +1,7 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { useState } from "react";
 import { Select } from "./Select";
+import { SELECT_THEME } from "./types";
 
 const samapleData = [
   {
@@ -43,4 +44,5 @@ const Template: ComponentStory<typeof Select> = (args) => {
 export const Default = Template.bind({});
 Default.args = {
   optionData: samapleData,
+  theme: SELECT_THEME.DEFAULT,
 };
