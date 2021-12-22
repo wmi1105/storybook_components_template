@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { useState } from "react";
-import { INPUT_THEME } from ".";
+import { INPUT_STYLE_THEME } from ".";
 import { Input } from "./Input";
 
 export default {
@@ -17,23 +17,23 @@ const Template: ComponentStory<typeof Input> = (args) => {
 
   return (
     <div>
-      value : {inputValue}
-      <div>
-        <Input {...args} value={inputValue} onChange={onChangeHandler} />
-      </div>
+      {/* value : {inputValue}
+      <div> */}
+      <Input {...args} value={inputValue} onChange={onChangeHandler} />
+      {/* </div> */}
     </div>
   );
 };
 
 export const Default = Template.bind({});
 Default.args = {
-  theme: INPUT_THEME.DEFAULT,
+  styleTheme: INPUT_STYLE_THEME.DEFAULT,
   placeholder: "내용을 입력해 주세요",
 };
 
 export const WidthLabel = Template.bind({});
 WidthLabel.args = {
-  label: "제목aaaaaaaaaaaaa",
-  theme: INPUT_THEME.OUTLINE,
+  label: "제목",
+  styleTheme: INPUT_STYLE_THEME.OUTLINE,
   placeholder: "제목을 입력해 주세요",
 };

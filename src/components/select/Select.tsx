@@ -46,7 +46,7 @@ const SelectStyled = styled.div`
   border: 1px solid blue;
   padding: 10px;
   :after {
-    content: ">";
+    content: "▼";
     float: right;
   }
 `;
