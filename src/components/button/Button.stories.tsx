@@ -17,10 +17,10 @@ const Template: ComponentStory<typeof Button> = (args) => {
 
   return (
     <div>
-      count : {count}
       <div>
         <Button {...args} onClick={onClickHandler} />
       </div>
+      click : {count}
     </div>
   );
 };
