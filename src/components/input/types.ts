@@ -1,3 +1,5 @@
+import { last } from "lodash";
+
 export enum INPUT_STYLE_THEME {
   DEFAULT = "DEFAULT",
   OUTLINE = "OUTLINE",
@@ -22,4 +24,8 @@ export interface IInput {
   placeholder?: string;
   value: string;
   onChange: (val: string) => void;
+}
+
+export interface IInputSocialNumber {
+  onValue: (value: string[]) => void;
 }
