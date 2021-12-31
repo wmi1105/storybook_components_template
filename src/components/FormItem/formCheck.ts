@@ -1,5 +1,5 @@
 import isEmpty from "lodash/isEmpty";
-import { IValidOption } from "./type";
+import { IValidOption } from "./types";
 
 const requiredText = "필수값을 입력 해 주세요.";
 
@@ -7,35 +7,35 @@ export const checkObject = <T>(
   obj: IValidOption<T>,
   newValue: T
 ): IValidOption<T> => {
-  const { value, validation, isRequired, defaultError, defaultSuccess } = obj;
+  // const { value, validation, isRequired, defaultError, defaultSuccess } = obj;
 
-  if (isRequired && isEmpty(newValue)) {
-    return {
-      ...obj,
-      value: newValue,
-      isError: true,
-      showMessage: defaultError ? defaultError : requiredText,
-    };
-  }
+  // if (isRequired && isEmpty(newValue)) {
+  //   return {
+  //     ...obj,
+  //     value: newValue,
+  //     isError: true,
+  //     showMessage: defaultError ? defaultError : requiredText,
+  //   };
+  // }
 
-  if (validation && typeof validation === "function") {
-    const errorText = validation(newValue);
-    if (!isEmpty(errorText)) {
-      return {
-        ...obj,
-        value: newValue,
-        isError: true,
-        showMessage: errorText,
-      };
-    }
-  }
+  // if (validation && typeof validation === "function") {
+  //   const errorText = validation(newValue);
+  //   if (!isEmpty(errorText)) {
+  //     return {
+  //       ...obj,
+  //       value: newValue,
+  //       isError: true,
+  //       showMessage: errorText,
+  //     };
+  //   }
+  // }
 
   return {
     ...obj,
-    value: newValue,
-    isError: false,
-    isDirty: true,
-    showMessage: defaultSuccess,
+    // value: newValue,
+    // isError: false,
+    // isDirty: true,
+    // showMessage: defaultSuccess,
   };
 };
 

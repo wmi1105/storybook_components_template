@@ -70,6 +70,7 @@ const InputSocialNumberStyled = styled.div<{ isFocus: boolean }>`
     margin-top: 15px;
   }
 `;
+
 const FrontInput = styled.input`
   ${() => inputStyle}
 `;
