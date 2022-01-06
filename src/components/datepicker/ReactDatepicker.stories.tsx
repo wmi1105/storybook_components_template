@@ -1,6 +1,5 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { ReactDatepicker } from "./ReactDatepicker";
-import { ToastDatepicker } from "./ToastDatepicker";
 
 export default {
   title: `Components/ReactDatepicker`,
@@ -13,7 +12,3 @@ const Template: ComponentStory<typeof ReactDatepicker> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {};
-
-export const ToastUiDatepicker = () => {
-  return <ToastDatepicker />;
-};
