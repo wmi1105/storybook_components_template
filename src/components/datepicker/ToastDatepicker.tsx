@@ -17,10 +17,13 @@ export function ToastDatepicker({ useTime, onChange, defaultDate }: IToastDP) {
   const tuiWrapperRef = useRef(null);
   const tuiInputRef = useRef(null);
 
-  const onChangeHandler = (val: Date) => {
-    const formatDate = moment(val).format(
-      useTime ? "yyyy-MM-DD HH:mm A" : "yyyy-MM-DD"
-    );
+  const onChangeHandler = () => {
+    const formatDate = tui
+      ? moment(tui.getDate()).format(
+          useTime ? "yyyy-MM-DD HH:mm A" : "yyyy-MM-DD"
+        )
+      : "";
+
     onChange(formatDate);
   };
 
@@ -40,9 +43,7 @@ export function ToastDatepicker({ useTime, onChange, defaultDate }: IToastDP) {
       );
     } else {
       tui.on("change", () =>
-        typeof onChange === "function"
-          ? onChangeHandler(tui.getDate())
-          : undefined
+        typeof onChangeHandler === "function" ? onChangeHandler() : undefined
       );
     }
     return () => {
