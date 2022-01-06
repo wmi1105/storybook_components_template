@@ -1,30 +1,12 @@
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { ITab } from './types';
 
-const options = [
-  {
-    id: "tab1",
-    text: "tab1",
-  },
-  {
-    id: "tab2",
-    text: "tab2",
-  },
-  {
-    id: "tab3",
-    text: "tab3",
-  },
-  {
-    id: "tab4",
-    text: "tab4",
-  },
-];
-
-export function Tab() {
+export function Tab({ options, activeId }: ITab) {
   return (
     <TabStyled flex={options.length}>
       {options.map((obj) => (
-        <TabOption id={obj.id} key={obj.id} active={obj.id === "tab2"}>
+        <TabOption id={obj.id} key={obj.id} active={obj.id === activeId}>
           {obj.text}
         </TabOption>
       ))}
