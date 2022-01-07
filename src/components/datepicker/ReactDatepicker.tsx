@@ -1,29 +1,20 @@
-import styled from "@emotion/styled";
-import { useMemo, useState } from "react";
+import styled from '@emotion/styled';
+import { useMemo, useRef, useState } from 'react';
 
-import DatePicker from "react-datepicker";
-import { getYear, getMonth } from "date-fns";
-import { range } from "lodash";
-import moment from "moment";
-import ko from "date-fns/locale/ko"; // 한국어적용
+import DatePicker from 'react-datepicker';
+import { getYear, getMonth } from 'date-fns';
+import { range } from 'lodash';
+import moment from 'moment';
+import ko from 'date-fns/locale/ko'; // 한국어적용
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-import "react-datepicker/dist/react-datepicker.min.css";
+import 'react-datepicker/dist/react-datepicker.min.css';
+
+const defaultDate = '2022-01-01';
 
 export function ReactDatepicker() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [month, setMonth] = useState(getMonth(new Date()));
-
-  // const months = useMemo(() => {
-  //   return [...Array(12)].map((n, idx) => ({ value: idx + 1, label: `${idx + 1}월` }));
-  // }, []);
-
-  // const years = useMemo(() => {
-  //   const yearArr = range(1960, getYear(new Date()) + 1, 1); //시작연도, 마지막 연도
-  //   return yearArr.map((num, idx) => ({
-  //     value: num,
-  //     label: num,
-  //   }));
-  // }, []);
+  const [selectedDate, setSelectedDate] = useState(new Date(defaultDate));
+  const [calMonth, setCalMonth] = useState(new Date(defaultDate).getMonth());
 
   const months = useMemo(() => {
     return [...Array(12)].map((n, idx) => `${idx + 1}월`);
@@ -31,7 +22,9 @@ export function ReactDatepicker() {
   const years = range(1990, getYear(new Date()) + 1, 1);
 
   const onChangeHandler = (date: Date | null) => {
-    if (date) setStartDate(date);
+    if (Number(calMonth) !== moment(date).month()) return false;
+    console.log(date);
+    if (date) setSelectedDate(date);
   };
 
   const renderDayContents = (day: number, date: Date) => {
@@ -39,22 +32,29 @@ export function ReactDatepicker() {
     const week = moment(date).day();
 
     const dayStyle = {
-      color: "#505050",
+      color: '#505050',
     };
-    if (week === 0) dayStyle.color = "#cf0303";
-    if (week === 6) dayStyle.color = "#0865ff";
-    if (Number(month) !== moment(date).month()) dayStyle.color = "#acacac"; //다른 달의 날짜
+    if (week === 0) dayStyle.color = '#cf0303';
+    if (week === 6) dayStyle.color = '#0865ff';
+
+    if (Number(calMonth) !== moment(date).month()) {
+      dayStyle.color = '#dfdfdf';
+    } //다른 달의 날짜
 
     return <span style={dayStyle}>{day}</span>;
   };
 
   return (
     <DatePicker
-      selected={startDate}
+      selected={selectedDate}
+      showPopperArrow={false} //input을 가리키는 화살표 제거
+      onMonthChange={(date) => setCalMonth(date.getMonth())}
       renderDayContents={renderDayContents}
       onChange={(date) => onChangeHandler(date)}
+      fixedHeight
       dateFormat="yyyy-MM-dd"
       locale={ko}
+      inline
       renderCustomHeader={({
         date,
         changeYear,
@@ -64,45 +64,28 @@ export function ReactDatepicker() {
         prevMonthButtonDisabled,
         nextMonthButtonDisabled,
       }) => (
-        <div
-          style={{
-            margin: 10,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <CustomDateWrapper>
           <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-            {"<"}
+            <FiChevronLeft />
           </button>
-          <select
-            value={getYear(date)}
-            onChange={({ target: { value } }) => changeYear(Number(value))}
-          >
-            {years.map((option, idx) => (
-              <option key={idx} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={months[getMonth(date)]}
-            onChange={({ target: { value } }) =>
-              changeMonth(months.indexOf(value))
-            }
-          >
-            {months.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-
-          <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-            {">"}
+          <div className="custom-month">
+            {date.getFullYear()}년 {months[date.getMonth()]}
+          </div>
+          <button onClick={decreaseMonth} disabled={nextMonthButtonDisabled}>
+            <FiChevronRight />
           </button>
-        </div>
+        </CustomDateWrapper>
       )}
     />
   );
 }
+
+const CustomDateWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+
+  .custom-month {
+    font-weight: bold;
+  }
+`;
