@@ -1,16 +1,16 @@
-import styled from '@emotion/styled';
-import { useMemo, useRef, useState } from 'react';
+import styled from "@emotion/styled";
+import { useMemo, useRef, useState } from "react";
 
-import DatePicker from 'react-datepicker';
-import { getYear, getMonth } from 'date-fns';
-import { range } from 'lodash';
-import moment from 'moment';
-import ko from 'date-fns/locale/ko'; // 한국어적용
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import DatePicker from "react-datepicker";
+import { getYear, getMonth } from "date-fns";
+import { range } from "lodash";
+import moment from "moment";
+import ko from "date-fns/locale/ko"; // 한국어적용
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-import 'react-datepicker/dist/react-datepicker.min.css';
+import "react-datepicker/dist/react-datepicker.min.css";
 
-const defaultDate = '2022-01-01';
+const defaultDate = "2022-01-01";
 
 export function ReactDatepicker() {
   const [selectedDate, setSelectedDate] = useState(new Date(defaultDate));
@@ -32,13 +32,13 @@ export function ReactDatepicker() {
     const week = moment(date).day();
 
     const dayStyle = {
-      color: '#505050',
+      color: "#505050",
     };
-    if (week === 0) dayStyle.color = '#cf0303';
-    if (week === 6) dayStyle.color = '#0865ff';
+    if (week === 0) dayStyle.color = "#cf0303";
+    if (week === 6) dayStyle.color = "#0865ff";
 
     if (Number(calMonth) !== moment(date).month()) {
-      dayStyle.color = '#dfdfdf';
+      dayStyle.color = "#dfdfdf";
     } //다른 달의 날짜
 
     return <span style={dayStyle}>{day}</span>;

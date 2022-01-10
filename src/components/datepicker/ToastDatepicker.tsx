@@ -6,7 +6,7 @@
 */
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
-import DatePicker from "tui-date-picker";
+import DatePicker, { CalendarOptions } from "tui-date-picker";
 
 import "tui-date-picker/dist/tui-date-picker.min.css";
 import "tui-time-picker/dist/tui-time-picker.css";
@@ -45,7 +45,24 @@ export function ToastDatepicker({ useTime, onChange, defaultDate }: IToastDP) {
       tui.on("change", () =>
         typeof onChangeHandler === "function" ? onChangeHandler() : undefined
       );
+
+      // tui.on(
+      //   "draw",
+      //   (event: {
+      //     date: Date;
+      //     type: "date" | "month" | "year";
+      //     dateElements: HTMLElement[];
+      //   }) => {
+      //     for (let i = 0, len = event.dateElements.length; i < len; i += 1) {
+      //       const el = event.dateElements[i];
+      //       console.log(el);
+      //       // const date = new Date(getData(el, "timestamp"));
+      //       // console.log(date);
+      //     }
+      //   }
+      // );
     }
+
     return () => {
       if (tui !== undefined) {
         tui.destroy();
