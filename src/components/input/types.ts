@@ -1,4 +1,5 @@
 import { last } from "lodash";
+import { ChangeEvent } from "react";
 
 export enum INPUT_STYLE_THEME {
   DEFAULT = "DEFAULT",
@@ -18,6 +19,7 @@ export enum INPUT_SIZE_THEME {
 }
 
 export interface IInput {
+  name: string;
   label?: string;
   styleTheme: INPUT_STYLE_THEME;
   lineTheme: INPUT_LINE_THEME;

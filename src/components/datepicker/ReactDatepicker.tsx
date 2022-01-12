@@ -49,12 +49,12 @@ export function ReactDatepicker() {
       selected={selectedDate}
       showPopperArrow={false} //input을 가리키는 화살표 제거
       onMonthChange={(date) => setCalMonth(date.getMonth())}
-      renderDayContents={renderDayContents}
       onChange={(date) => onChangeHandler(date)}
       fixedHeight
       dateFormat="yyyy-MM-dd"
       locale={ko}
       inline
+      renderDayContents={renderDayContents}
       renderCustomHeader={({
         date,
         changeYear,

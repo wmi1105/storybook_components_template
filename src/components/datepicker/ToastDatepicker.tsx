@@ -6,7 +6,7 @@
 */
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
-import DatePicker, { CalendarOptions } from "tui-date-picker";
+import DatePicker from "tui-date-picker";
 
 import "tui-date-picker/dist/tui-date-picker.min.css";
 import "tui-time-picker/dist/tui-time-picker.css";
