@@ -1,27 +1,27 @@
-import { Control, RegisterOptions, UseControllerProps } from "react-hook-form";
+import { Control, RegisterOptions, UseControllerReturn } from "react-hook-form";
 
 export interface IFormOption {
   name: string;
   defaultValue: string;
   isRequired: boolean;
-  rules: Omit<
-    RegisterOptions,
-    "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
-  >;
-  errorMessage: string;
+  rules: IFormRules;
+  message: {
+    success: string;
+    error: string;
+    default?: string;
+  };
 }
 
 export interface IForm {
-  options: IFormOption[];
   children: JSX.Element | JSX.Element[];
-  onFormState: (param: IFromItemState[]) => void;
 }
 
 export interface IFormItem {
   option: IFormOption;
-  child: JSX.Element;
   control: Control;
   onItemState: (param: IFromItemState) => void;
+  render: (field: IFormField) => JSX.Element;
+  displayMsg: boolean;
 }
 
 export interface IFromItemState {
@@ -29,3 +29,10 @@ export interface IFromItemState {
   state: boolean;
   value: string;
 }
+
+export type IFormRules = Omit<
+  RegisterOptions,
+  "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
+>;
+
+export type IFormField = Pick<UseControllerReturn, "field">["field"];

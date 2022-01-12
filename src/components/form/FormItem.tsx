@@ -1,18 +1,25 @@
+import { css, SerializedStyles } from "@emotion/react";
 import styled from "@emotion/styled";
 import { createElement, useEffect } from "react";
 import { useController } from "react-hook-form";
 import { IFormItem } from "./form_types";
 
-export function FormItem({ option, control, child, onItemState }: IFormItem) {
-  const {
-    field: { onChange, onBlur, name, value, ref },
-    fieldState: { invalid, isTouched, isDirty, error },
-    formState: { touchedFields, dirtyFields },
-  } = useController({
+export function FormItem({
+  option,
+  control,
+  onItemState,
+  render,
+  displayMsg,
+}: IFormItem) {
+  const { field, fieldState, formState } = useController({
     name: option.name,
     rules: { ...option.rules, required: option.isRequired },
     control,
   });
+
+  const { onChange, onBlur, name, value, ref } = field;
+  const { invalid, isTouched, isDirty, error } = fieldState;
+  const { touchedFields, dirtyFields } = formState;
 
   useEffect(() => {
     onItemState({
@@ -22,24 +29,45 @@ export function FormItem({ option, control, child, onItemState }: IFormItem) {
     });
   }, [value, isDirty, error]);
 
+  const child = render(field);
+
   return (
     <FormItemStyled>
-      {createElement(child.type, {
-        ...{
-          ...child.props,
-          value: value,
-          onChange: onChange,
-        },
-      })}
-      {isDirty && error && <span>{option.errorMessage}</span>}
-      {!isDirty && <span>입력해주세요</span>}
+      {child}
+      <div>
+        {displayMsg && (
+          <>
+            {isDirty && error && (
+              <ErrorMessage>{option.message.error}</ErrorMessage>
+            )}
+            {isDirty && !error && (
+              <SucMessage>{option.message.success}</SucMessage>
+            )}
+            {option.message.default && (
+              <DefaultMessage>{option.message.default}</DefaultMessage>
+            )}
+          </>
+        )}
+      </div>
     </FormItemStyled>
   );
 }
 
+FormItem.defaultProps = {
+  displayMsg: true,
+};
+
 const FormItemStyled = styled.div`
-  padding: 10px 0;
-  span {
-    color: #e00;
+  > div {
+    min-height: 20px;
   }
 `;
+
+const ErrorMessage = styled.span`
+  color: #e00;
+`;
+const SucMessage = styled.span`
+  color: #0ee;
+`;
+
+const DefaultMessage = styled.span``;

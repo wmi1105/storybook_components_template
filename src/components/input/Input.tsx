@@ -5,7 +5,6 @@ import { INPUT_LINE_THEME } from ".";
 import { IInput, INPUT_STYLE_THEME } from "./types";
 
 export function Input({
-  name,
   label,
   styleTheme,
   lineTheme,

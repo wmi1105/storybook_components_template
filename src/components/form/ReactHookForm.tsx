@@ -3,25 +3,16 @@ https://codesandbox.io/s/react-hook-form-with-ui-library-ts-forked-qjgkx?file=/s
 https://react-hook-form.com/api/useform/formstate
 */
 
-import { forEach } from "lodash";
-import { createElement, useRef } from "react";
-import { Controller, UseControllerProps, useForm } from "react-hook-form";
-import { FormItem } from "../FormItem";
-import { IForm } from "./form_types";
+import { Controller, useForm } from "react-hook-form";
+import { Input, INPUT_LINE_THEME, INPUT_STYLE_THEME } from "../input";
 
-export function ReactHookForm({ children, options }: IForm) {
-  const childArray = Array.isArray(children) ? children : [children];
-
-  let formDefaultValue: { [key: string]: string } = {};
-  options.forEach(({ name, defaultValue }) => {
-    const temp = { [name]: defaultValue };
-    formDefaultValue = { ...formDefaultValue, ...temp };
-  });
-
+export function ReactHookForm() {
   const { handleSubmit, control, reset, formState, watch } = useForm({
     mode: "onSubmit",
     reValidateMode: "onChange",
-    defaultValues: formDefaultValue,
+    defaultValues: {
+      text: "",
+    },
   });
 
   const onSubmit = (data: any) => console.log(data);
@@ -40,40 +31,19 @@ export function ReactHookForm({ children, options }: IForm) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {childArray.map((child, idx) => {
-        return (
-          <Controller
-            key={idx}
-            name={child.props.name}
-            control={control}
-            rules={{ maxLength: 10, required: true }}
-            render={({ field: { onChange, onBlur, value, ref } }) =>
-              createElement(child.type, {
-                ...{
-                  ...child.props,
-                  value: value,
-                  onChange: onChange,
-                },
-              })
-            }
-          />
-        );
-      })}
-
-      {/* <Controller
+      <Controller
         name="text"
         control={control}
         rules={{ maxLength: 10, required: true }}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <Input
-            name=""
             onChange={onChange}
             value={value}
             styleTheme={INPUT_STYLE_THEME.DEFAULT}
             lineTheme={INPUT_LINE_THEME.HORIZONTAL}
           />
         )}
-      /> */}
+      />
 
       <input type="submit" />
     </form>
