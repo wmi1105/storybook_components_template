@@ -17,7 +17,7 @@ const Template: ComponentStory<typeof Form> = () => {
       name: "text1",
       defaultValue: "",
       isRequired: true,
-      rules: { maxLength: 10 },
+      rules: { validate: () => getValue("text1") === "test" },
       message: {
         success: "맞음",
         error: "오류있음",
@@ -35,8 +35,7 @@ const Template: ComponentStory<typeof Form> = () => {
     },
   ];
 
-  const { control, handleSubmit } = useFormHooks(formOption);
-
+  const { control, handleSubmit, getValue } = useFormHooks(formOption);
   return (
     <Form handleSubmit={handleSubmit}>
       <FormItem

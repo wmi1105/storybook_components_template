@@ -27,9 +27,14 @@ export function useFormHooks(option: IFormOption[]) {
   console.log("watch", watch());
   // console.groupEnd();
 
+  const getValue = (name: string) => {
+    return getValues(name);
+  };
+
   return {
     control,
     reset,
     handleSubmit,
+    getValue,
   };
 }
