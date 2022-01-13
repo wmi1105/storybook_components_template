@@ -9,10 +9,10 @@
 - input 컴포넌트 테마 지정
 - 선택적 label 사용 지정
 
-#### `formItem`
+#### `form`
 
-- input, select 등 컴포넌트를 값의 validation 체크
-- (작업 중 보류)
+- react-hook-form library 사용
+- 컴포넌트 값의 validation 체크
 
 #### `select`
 
