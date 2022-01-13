@@ -12,7 +12,7 @@ export default {
 } as ComponentMeta<typeof Form>;
 
 const Template: ComponentStory<typeof Form> = () => {
-  const formProps: IFormOption[] = [
+  const formOption: IFormOption[] = [
     {
       name: "text1",
       defaultValue: "",
@@ -35,12 +35,12 @@ const Template: ComponentStory<typeof Form> = () => {
     },
   ];
 
-  const { control } = useFormHooks(formProps);
+  const { control, handleSubmit } = useFormHooks(formOption);
 
   return (
-    <Form>
+    <Form handleSubmit={handleSubmit}>
       <FormItem
-        option={formProps[0]}
+        option={formOption[0]}
         control={control}
         onItemState={(e: any) => console.log(e)}
         render={({ value, onChange }: IFormField) => (
@@ -54,7 +54,7 @@ const Template: ComponentStory<typeof Form> = () => {
       />
 
       <FormItem
-        option={formProps[1]}
+        option={formOption[1]}
         control={control}
         onItemState={(e: any) => console.log(e)}
         render={({ value, onChange }: IFormField) => (

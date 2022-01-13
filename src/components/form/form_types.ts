@@ -1,4 +1,9 @@
-import { Control, RegisterOptions, UseControllerReturn } from "react-hook-form";
+import {
+  Control,
+  RegisterOptions,
+  UseControllerReturn,
+  UseFormReturn,
+} from "react-hook-form";
 
 export interface IFormOption {
   name: string;
@@ -12,10 +17,9 @@ export interface IFormOption {
   };
 }
 
-export interface IForm {
+export interface IForm extends Pick<UseFormReturn, "handleSubmit"> {
   children: JSX.Element | JSX.Element[];
 }
-
 export interface IFormItem {
   option: IFormOption;
   control: Control;

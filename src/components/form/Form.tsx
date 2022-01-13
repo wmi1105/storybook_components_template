@@ -3,6 +3,12 @@ https://codesandbox.io/s/react-hook-form-with-ui-library-ts-forked-qjgkx?file=/s
 https://react-hook-form.com/api/useform/formstate
 */
 
-export function Form({ children }: { children: JSX.Element | JSX.Element[] }) {
-  return <form>{children}</form>;
+import { IForm } from "./form_types";
+
+export function Form({ children, handleSubmit }: IForm) {
+  const onSubmit = (e: any) => {
+    console.log(e);
+  };
+
+  return <form onSubmit={handleSubmit(onSubmit)}>{children}</form>;
 }

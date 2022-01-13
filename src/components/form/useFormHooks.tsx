@@ -30,5 +30,6 @@ export function useFormHooks(option: IFormOption[]) {
   return {
     control,
     reset,
+    handleSubmit,
   };
 }
