@@ -22,12 +22,11 @@ export function FormItem({
   const { touchedFields, dirtyFields } = formState;
 
   useEffect(() => {
-    onItemState &&
-      onItemState({
-        name: option.name,
-        state: isDirty && !error ? true : false,
-        value: value,
-      });
+    onItemState({
+      name: option.name,
+      state: isDirty && !error ? true : false,
+      value: value,
+    });
   }, [value, isDirty, error]);
 
   const child = render(field);

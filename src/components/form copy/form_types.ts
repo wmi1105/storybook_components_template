@@ -17,16 +17,13 @@ export interface IFormOption {
   };
 }
 
-export interface IForm {
-  option: IFormOption[];
-  onSubmit: (data: unknown, isValid: boolean) => void;
-  render: (control: Control) => JSX.Element | JSX.Element[];
-  ref?: HTMLFormElement;
+export interface IForm extends Pick<UseFormReturn, "handleSubmit"> {
+  children: JSX.Element | JSX.Element[];
 }
 export interface IFormItem {
   option: IFormOption;
   control: Control;
-  onItemState?: (param: IFromItemState) => void;
+  onItemState: (param: IFromItemState) => void;
   render: (field: IFormField) => JSX.Element;
   displayMsg: boolean;
 }

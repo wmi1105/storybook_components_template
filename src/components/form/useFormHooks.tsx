@@ -1,19 +1,60 @@
+import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IFormOption } from "./form_types";
+import { Control } from "react-hook-form";
 
 export function useFormHooks(option: IFormOption[]) {
+  const formRef = useRef<HTMLFormElement>(null);
   let formDefaultValue: { [key: string]: string } = {};
   option.forEach((opt) => {
     const temp = { [opt.name]: opt.defaultValue };
     formDefaultValue = { ...formDefaultValue, ...temp };
   });
 
-  const { control, reset, handleSubmit, getValues, watch } = useForm({
-    mode: "onChange", //버튼 쓸거면 onSubmit 으로
-    reValidateMode: "onChange",
-    defaultValues: formDefaultValue,
-    shouldFocusError: true,
-  });
+  const { control, reset, handleSubmit, getValues, watch, formState } = useForm(
+    {
+      mode: "onChange", //버튼 쓸거면 onSubmit 으로
+      reValidateMode: "onChange",
+      defaultValues: formDefaultValue,
+      shouldFocusError: true,
+    }
+  );
+
+  const [childJSX, setChildJSX] = useState<JSX.Element | JSX.Element[] | null>(
+    null
+  );
+
+  const setFormItem = (
+    value: (control: Control) => JSX.Element | JSX.Element[]
+  ) => {
+    const child = value(control);
+    setChildJSX(child);
+  };
+
+  const onFormState = (data: unknown, isValid: unknown) => {
+    return { data, isValid };
+  };
+
+  const onSubmit = () => {
+    if (formRef.current) {
+      formRef.current.requestSubmit();
+    }
+  };
+
+  const onSubmitHandler = (e: FormEvent) => {
+    handleSubmit((event) => onFormState(event, formState.isValid))(e).catch(
+      (event) => console.log("catch", event)
+    );
+    // .finally(() => setRefresh((prev) => prev + 1));
+
+    e.preventDefault();
+  };
+
+  const render = childJSX ? (
+    <form ref={formRef} onSubmit={onSubmitHandler}>
+      {childJSX}
+    </form>
+  ) : null;
 
   // console.group("formState");
   // console.log("isDirty", formState.isDirty); //사용자가 한번이라도 입력했으면 true
@@ -27,14 +68,13 @@ export function useFormHooks(option: IFormOption[]) {
   console.log("watch", watch());
   // console.groupEnd();
 
-  const getValue = (name: string) => {
-    return getValues(name);
-  };
-
   return {
     control,
     reset,
-    handleSubmit,
-    getValue,
+    watch,
+    setFormItem,
+    onSubmit,
+    isValid: formState.isValid,
+    render,
   };
 }
