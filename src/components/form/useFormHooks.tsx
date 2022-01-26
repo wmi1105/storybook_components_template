@@ -3,27 +3,35 @@ import { useForm } from "react-hook-form";
 import { IFormOption } from "./form_types";
 import { Control } from "react-hook-form";
 
-export function useFormHooks(option: IFormOption[]) {
-  const formRef = useRef<HTMLFormElement>(null);
-  let formDefaultValue: { [key: string]: string } = {};
+function defaultValueParsing(option: IFormOption[]) {
+  let result: { [key: string]: string } = {};
   option.forEach((opt) => {
     const temp = { [opt.name]: opt.defaultValue };
-    formDefaultValue = { ...formDefaultValue, ...temp };
+    result = { ...result, ...temp };
   });
 
+  return result;
+}
+
+export function useFormHooks(option: IFormOption[]) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const formDefaultValue = defaultValueParsing(option);
   const { control, reset, handleSubmit, getValues, watch, formState } = useForm(
     {
-      mode: "onChange", //버튼 쓸거면 onSubmit 으로
+      mode: "onSubmit", //버튼 쓸거면 onSubmit 으로, 아니면 onChange
       reValidateMode: "onChange",
       defaultValues: formDefaultValue,
       shouldFocusError: true,
     }
   );
 
+  const [refresh, setRefresh] = useState(0);
+  const [submitState, setSubmitState] = useState();
   const [childJSX, setChildJSX] = useState<JSX.Element | JSX.Element[] | null>(
     null
   );
 
+  //FormItem jsx 받기
   const setFormItem = (
     value: (control: Control) => JSX.Element | JSX.Element[]
   ) => {
@@ -31,16 +39,20 @@ export function useFormHooks(option: IFormOption[]) {
     setChildJSX(child);
   };
 
+  //form state 파싱 =========== 여기 해야됨
   const onFormState = (data: unknown, isValid: unknown) => {
     return { data, isValid };
   };
 
+  //submit button click
   const onSubmit = () => {
+    setRefresh((prev) => prev + 1);
     if (formRef.current) {
       formRef.current.requestSubmit();
     }
   };
 
+  //form submit event
   const onSubmitHandler = (e: FormEvent) => {
     handleSubmit((event) => onFormState(event, formState.isValid))(e).catch(
       (event) => console.log("catch", event)
@@ -50,6 +62,7 @@ export function useFormHooks(option: IFormOption[]) {
     e.preventDefault();
   };
 
+  //FormItem jsx가 있으면 render
   const render = childJSX ? (
     <form ref={formRef} onSubmit={onSubmitHandler}>
       {childJSX}
@@ -69,7 +82,6 @@ export function useFormHooks(option: IFormOption[]) {
   // console.groupEnd();
 
   return {
-    control,
     reset,
     watch,
     setFormItem,

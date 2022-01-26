@@ -110,6 +110,7 @@ export const UseHook = () => {
   );
 
   useEffect(() => {
+    console.log("rerender");
     setFormItem((control) => item(control));
   }, []);
 
