@@ -3,15 +3,15 @@ https://codesandbox.io/s/react-hook-form-with-ui-library-ts-forked-qjgkx?file=/s
 https://react-hook-form.com/api/useform/formstate
 */
 
-import { Controller, useForm } from "react-hook-form";
-import { Input, INPUT_LINE_THEME, INPUT_STYLE_THEME } from "../input";
+import { Controller, useForm } from 'react-hook-form';
+import Input from '../input/Input';
 
 export function ReactHookForm() {
   const { handleSubmit, control, reset, formState, watch } = useForm({
-    mode: "onSubmit",
-    reValidateMode: "onChange",
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
-      text: "",
+      text: '',
     },
   });
 
@@ -26,7 +26,7 @@ export function ReactHookForm() {
   // console.log("isValid", formState.isValid); //양식에 오류가 없으면 true
   // console.log("isValidating", formState.isValidating); //유효성 검사 중이면 true
   // console.log("errors", formState.errors);
-  console.log("watch", watch());
+  console.log('watch', watch());
   // console.groupEnd();
 
   return (
@@ -36,12 +36,7 @@ export function ReactHookForm() {
         control={control}
         rules={{ maxLength: 10, required: true }}
         render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Input
-            onChange={onChange}
-            value={value}
-            styleTheme={INPUT_STYLE_THEME.DEFAULT}
-            lineTheme={INPUT_LINE_THEME.HORIZONTAL}
-          />
+          <Input value={value} onChange={onChange} />
         )}
       />
 

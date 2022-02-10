@@ -1,7 +1,6 @@
-import { FormEvent, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { IFormOption } from "./form_types";
-import { Control } from "react-hook-form";
+import { FormEvent, useRef, useState } from 'react';
+import { useForm, Control } from 'react-hook-form';
+import { IFormOption } from '@src/components/form/form_types';
 
 function defaultValueParsing(option: IFormOption[]) {
   let result: { [key: string]: string } = {};
@@ -13,30 +12,32 @@ function defaultValueParsing(option: IFormOption[]) {
   return result;
 }
 
-export function useFormHooks(option: IFormOption[]) {
+export function useFormHooks(option: IFormOption[], mode?: 'onChange' | 'onSubmit') {
   const formRef = useRef<HTMLFormElement>(null);
   const formDefaultValue = defaultValueParsing(option);
-  const { control, reset, handleSubmit, getValues, watch, formState } = useForm(
-    {
-      mode: "onSubmit", //버튼 쓸거면 onSubmit 으로, 아니면 onChange
-      reValidateMode: "onChange",
-      defaultValues: formDefaultValue,
-      shouldFocusError: true,
-    }
-  );
+  const { control, reset, handleSubmit, watch, formState } = useForm({
+    mode: mode ? mode : 'onSubmit', //버튼 쓸거면 onSubmit 으로, 아니면 onChange
+    reValidateMode: mode ? mode : 'onSubmit',
+    defaultValues: formDefaultValue,
+    shouldFocusError: true,
+  });
 
   const [refresh, setRefresh] = useState(0);
-  const [submitState, setSubmitState] = useState();
-  const [childJSX, setChildJSX] = useState<JSX.Element | JSX.Element[] | null>(
-    null
-  );
+  const [childJSX, setChildJSX] = useState<JSX.Element | null>(null);
+
+  // const setItemError = (name: string, types: MultipleFieldErrors) => {
+  //   setError('hospital', {
+  //     types: {
+  //       required: 'this is reqruied',
+  //     },
+  //   });
+  // };
 
   //FormItem jsx 받기
-  const setFormItem = (
-    value: (control: Control) => JSX.Element | JSX.Element[]
-  ) => {
-    const child = value(control);
-    setChildJSX(child);
+  const setFormItem = (value: (control: Control) => JSX.Element) => {
+    const formItemJsx = value(control);
+    console.log(formItemJsx);
+    setChildJSX(formItemJsx);
   };
 
   //form state 파싱 =========== 여기 해야됨
@@ -54,13 +55,17 @@ export function useFormHooks(option: IFormOption[]) {
 
   //form submit event
   const onSubmitHandler = (e: FormEvent) => {
-    handleSubmit((event) => onFormState(event, formState.isValid))(e).catch(
-      (event) => console.log("catch", event)
+    handleSubmit((event) => onFormState(event, formState.isValid))(e).catch((event) =>
+      console.log('catch', event),
     );
     // .finally(() => setRefresh((prev) => prev + 1));
 
     e.preventDefault();
   };
+
+  const formItem = option.map((obj, idx) => {
+    return null;
+  });
 
   //FormItem jsx가 있으면 render
   const render = childJSX ? (
@@ -78,7 +83,7 @@ export function useFormHooks(option: IFormOption[]) {
   // console.log("isValid", formState.isValid); //양식에 오류가 없으면 true
   // console.log("isValidating", formState.isValidating); //유효성 검사 중이면 true
   // console.log("errors", formState.errors);
-  console.log("watch", watch());
+  console.log('watch', watch());
   // console.groupEnd();
 
   return {

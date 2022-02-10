@@ -1,9 +1,11 @@
 import {
   Control,
+  MultipleFieldErrors,
   RegisterOptions,
   UseControllerReturn,
   UseFormReturn,
-} from "react-hook-form";
+  UseFormSetError,
+} from 'react-hook-form';
 
 export interface IFormOption {
   name: string;
@@ -11,19 +13,24 @@ export interface IFormOption {
   isRequired: boolean;
   rules: IFormRules;
   message: {
-    success: string;
-    error: string;
+    success?: string;
+    error?: MultipleFieldErrors;
     default?: string;
   };
 }
 
-export interface IForm {
-  option: IFormOption[];
-  onSubmit: (data: unknown, isValid: boolean) => void;
-  render: (control: Control) => JSX.Element | JSX.Element[];
-  ref?: HTMLFormElement;
+export interface IForm extends Pick<UseFormReturn, 'handleSubmit'> {
+  children: JSX.Element | JSX.Element[];
 }
+
+export enum RENDER_STATE {
+  DEFAULT = 'DEFAULT',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+}
+
 export interface IFormItem {
+  name: string;
   option: IFormOption;
   control: Control;
   onItemState?: (param: IFromItemState) => void;
@@ -37,9 +44,21 @@ export interface IFromItemState {
   value: string;
 }
 
+export interface IRenderState {
+  renderState: RENDER_STATE;
+}
+
 export type IFormRules = Omit<
   RegisterOptions,
-  "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
+  'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
 >;
 
-export type IFormField = Pick<UseControllerReturn, "field">["field"];
+export type IFormField = UseControllerReturn['field'] &
+  UseControllerReturn['fieldState'] &
+  IRenderState;
+
+export interface ISetError {
+  setError: UseFormSetError<{
+    [key: string]: string;
+  }>;
+}

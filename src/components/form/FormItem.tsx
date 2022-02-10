@@ -1,36 +1,46 @@
-import { css, SerializedStyles } from "@emotion/react";
-import styled from "@emotion/styled";
-import { createElement, useEffect } from "react";
-import { useController } from "react-hook-form";
-import { IFormItem } from "./form_types";
+import { css, SerializedStyles } from '@emotion/react';
+import styled from '@emotion/styled';
+import { createElement, useEffect, useMemo } from 'react';
+import { useController } from 'react-hook-form';
+import { IFormItem, RENDER_STATE } from './form_types';
 
-export function FormItem({
-  option,
-  control,
-  onItemState,
-  render,
-  displayMsg,
-}: IFormItem) {
+export function FormItem({ name, option, control, onItemState, render, displayMsg }: IFormItem) {
+  console.log('option', option);
   const { field, fieldState, formState } = useController({
     name: option.name,
     rules: { ...option.rules, required: option.isRequired },
     control,
   });
 
-  const { onChange, onBlur, name, value, ref } = field;
+  const { onChange, onBlur, value, ref } = field;
   const { invalid, isTouched, isDirty, error } = fieldState;
-  const { touchedFields, dirtyFields } = formState;
+  const { submitCount } = formState; //submit일 때 1, 아닐 때 0
+
+  // 입력 안했을떄
+  // 입력 + error / 입력 + 성공
+  const renderState = !isDirty
+    ? RENDER_STATE.DEFAULT
+    : !error
+    ? RENDER_STATE.SUCCESS
+    : RENDER_STATE.ERROR;
 
   useEffect(() => {
-    onItemState &&
+    if (onItemState && submitCount > 0)
       onItemState({
         name: option.name,
         state: isDirty && !error ? true : false,
-        value: value,
+        value: field.value,
       });
-  }, [value, isDirty, error]);
+  }, [field.value, isDirty, error, submitCount]);
 
-  const child = render(field);
+  const child = render({ ...field, ...fieldState, renderState });
+
+  const errorMsg = useMemo(() => {
+    if (!error || !option.message.error) return null;
+    const errorType = error.type;
+
+    return errorType ? option.message.error[errorType] : null;
+  }, [error]);
 
   return (
     <FormItemStyled>
@@ -38,15 +48,13 @@ export function FormItem({
       <div>
         {displayMsg && (
           <>
-            {isDirty && error && (
-              <ErrorMessage>{option.message.error}</ErrorMessage>
+            {submitCount > 0 && (
+              <>
+                {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+                {!error && <SucMessage>{option.message.success}</SucMessage>}
+              </>
             )}
-            {isDirty && !error && (
-              <SucMessage>{option.message.success}</SucMessage>
-            )}
-            {option.message.default && (
-              <DefaultMessage>{option.message.default}</DefaultMessage>
-            )}
+            {option.message.default && <DefaultMessage>{option.message.default}</DefaultMessage>}
           </>
         )}
       </div>
@@ -55,6 +63,7 @@ export function FormItem({
 }
 
 FormItem.defaultProps = {
+  name: '',
   displayMsg: true,
 };
 

@@ -1,13 +1,19 @@
 import {
   Control,
+  FieldValue,
+  FieldValues,
   RegisterOptions,
   UseControllerReturn,
   UseFormReturn,
 } from "react-hook-form";
 
+export interface IDefaultValue {
+  [key: string]: string;
+}
+
 export interface IFormOption {
   name: string;
-  defaultValue: string;
+  defaultValue: string | IDefaultValue[];
   isRequired: boolean;
   rules: IFormRules;
   message: {
@@ -17,12 +23,16 @@ export interface IFormOption {
   };
 }
 
+export interface IControlValues {
+  [key: string]: string | IDefaultValue[];
+}
+
 export interface IForm extends Pick<UseFormReturn, "handleSubmit"> {
   children: JSX.Element | JSX.Element[];
 }
 export interface IFormItem {
   option: IFormOption;
-  control: Control;
+  control: Control<FieldValues>;
   onItemState: (param: IFromItemState) => void;
   render: (field: IFormField) => JSX.Element;
   displayMsg: boolean;
